@@ -1,16 +1,32 @@
 import streamlit as st
 import numpy as np
 import pickle
-from tensorflow.keras.models import load_model
+
+# Try to import TensorFlow and load the model
+try:
+    from tensorflow.keras.models import load_model
+    import tensorflow as tf
+except ImportError:
+    st.error("TensorFlow is not installed. Please ensure TensorFlow is available in your environment.")
+    st.stop()
 
 # File paths
 model_path = "demand prediction.h5"
 scaler_path = "scaler.pkl"
 
 # Load the trained model and scaler
-model = load_model(model_path)
-with open(scaler_path, 'rb') as file:
-    scaler = pickle.load(file)  # Load the scaler using pickle
+try:
+    model = load_model(model_path)
+except Exception as e:
+    st.error(f"Failed to load the model: {e}")
+    st.stop()
+
+try:
+    with open(scaler_path, 'rb') as file:
+        scaler = pickle.load(file)  # Load the scaler using pickle
+except Exception as e:
+    st.error(f"Failed to load the scaler: {e}")
+    st.stop()
 
 # Title and description
 st.title("Demand Prediction using LSTM Model")
@@ -24,16 +40,19 @@ some_other_feature = st.number_input("Other Feature", min_value=0.0, format="%.2
 
 # Prediction button
 if st.button("Predict Demand"):
-    # Prepare input data for prediction
-    input_data = np.array([[year, location, week, some_other_feature]])
-    input_scaled = scaler.transform(input_data)  # Use transform instead of fit_transform
-    input_lstm = input_scaled.reshape((input_scaled.shape[0], 1, input_scaled.shape[1]))
+    try:
+        # Prepare input data for prediction
+        input_data = np.array([[year, location, week, some_other_feature]])
+        input_scaled = scaler.transform(input_data)  # Use transform instead of fit_transform
+        input_lstm = input_scaled.reshape((input_scaled.shape[0], 1, input_scaled.shape[1]))
 
-    # Predict using the loaded model
-    prediction = model.predict(input_lstm)
-    
-    # Display the prediction
-    st.write(f"Predicted Demand: {prediction[0][0]:.2f}")
+        # Predict using the loaded model
+        prediction = model.predict(input_lstm)
+        
+        # Display the prediction
+        st.write(f"Predicted Demand: {prediction[0][0]:.2f}")
+    except Exception as e:
+        st.error(f"An error occurred during prediction: {e}")
 
 # Display additional information
 st.write("Ensure your input values match the expected format and ranges used during model training.")
