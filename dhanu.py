@@ -1,10 +1,11 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import load_model
+import tensorflow as tf
+
 from sklearn.preprocessing import StandardScaler
 
-model = load_model(r"C:\Users\HP\Downloads\bicycle\demand prediction.h5")  # Update with the path to your saved model file
+model = tf.keras.models.load_model("demand prediction.h5")  # Update with the path to your saved model file
 
 # Load your scaler (if saved separately, otherwise ensure the same scaler is used for preprocessing)
 scaler = StandardScaler()
