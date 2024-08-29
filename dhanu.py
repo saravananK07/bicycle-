@@ -1,13 +1,13 @@
 import streamlit as st
 import numpy as np
-#import tensorflow as tf
-#import joblib
-#from scikit-learn.preprocessing import StandardScaler
+import tensorflow as tf
+import joblib
 
-model = tensorflow.keras.models.load_model("demand prediction.h5")  # Update with the path to your saved model file
+# Load your trained model
+model = tf.keras.models.load_model("demand prediction.h5")
 
-# Load your scaler (if saved separately, otherwise ensure the same scaler is used for preprocessing)
-scaler = StandardScaler()
+# Load the scaler from the scaler.pkl file
+scaler = joblib.load("scaler.pkl")
 
 # Title and description
 st.title("Demand Prediction using LSTM Model")
@@ -18,12 +18,15 @@ year = st.number_input("Year", min_value=2000, max_value=2100, value=2023)
 location = st.number_input("Location ID", min_value=0, max_value=100, value=1)
 week = st.number_input("Week", min_value=1, max_value=53, value=1)
 
-
 # Prediction button
 if st.button("Predict Demand"):
     # Prepare input data for prediction
     input_data = np.array([[year, location, week]])
-    input_scaled = scaler.fit_transform(input_data)  # Make sure the scaler is fit on similar data as the training data
+    
+    # Use the loaded scaler to transform the input data
+    input_scaled = scaler.transform(input_data)
+    
+    # Reshape the input data for LSTM model
     input_lstm = input_scaled.reshape((input_scaled.shape[0], 1, input_scaled.shape[1]))
 
     # Predict using the loaded model
