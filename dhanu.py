@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-import joblib
+import pickle
 from tensorflow.keras.models import load_model
 
 # File paths
@@ -9,7 +9,8 @@ scaler_path = "scaler.pkl"
 
 # Load the trained model and scaler
 model = load_model(model_path)
-scaler = joblib.load(scaler_path)  # Load the scaler
+with open(scaler_path, 'rb') as file:
+    scaler = pickle.load(file)  # Load the scaler using pickle
 
 # Title and description
 st.title("Demand Prediction using LSTM Model")
