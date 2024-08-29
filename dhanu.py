@@ -1,9 +1,8 @@
 import streamlit as st
 import numpy as np
-import pandas as pd
-#import tensorflow as tf
-
-from scikit-learn.preprocessing import StandardScaler
+import tensorflow as tf
+import joblib
+#from scikit-learn.preprocessing import StandardScaler
 
 model = tensorflow.keras.models.load_model("demand prediction.h5")  # Update with the path to your saved model file
 
