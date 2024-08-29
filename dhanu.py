@@ -1,14 +1,8 @@
 import streamlit as st
 import numpy as np
 import pickle
-
-# Try to import TensorFlow and load the model
-try:
-    from tensorflow.keras.models import load_model
-    import tensorflow as tf
-except ImportError:
-    st.error("TensorFlow is not installed. Please ensure TensorFlow is available in your environment.")
-    st.stop()
+import tensorflow as tf
+from tensorflow.keras.models import load_model
 
 # File paths
 model_path = "demand prediction.h5"
